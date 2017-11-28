@@ -4,10 +4,10 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "passwords", schema = "public", catalog = "airports")
-public class PasswordsEntity {
+public class PasswordEntity {
     private int id;
     private String password;
-    private UsersEntity usersById;
+    private UserEntity userById;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,7 +35,7 @@ public class PasswordsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PasswordsEntity that = (PasswordsEntity) o;
+        PasswordEntity that = (PasswordEntity) o;
 
         return password != null ? password.equals(that.password) : that.password == null;
     }
@@ -49,11 +49,11 @@ public class PasswordsEntity {
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
-    public UsersEntity getUsersById() {
-        return usersById;
+    public UserEntity getUserById() {
+        return userById;
     }
 
-    public void setUsersById(UsersEntity usersById) {
-        this.usersById = usersById;
+    public void setUserById(UserEntity usersById) {
+        this.userById = usersById;
     }
 }

@@ -9,12 +9,16 @@
         <property name="connection.username">main_user</property>
         <property name="connection.password">hohoho</property>
 
-        <mapping class="model.entities.AirportsEntity"/>
-        <mapping class="model.entities.CitiesEntity"/>
+        <property name="current_session_context_class">thread</property>
+        <property name="show_sql">true</property>
+        <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
+
+        <mapping class="model.entities.AirportEntity"/>
+        <mapping class="model.entities.CityEntity"/>
         <mapping class="model.entities.FlightEntity"/>
-        <mapping class="model.entities.PasswordsEntity"/>
-        <mapping class="model.entities.TransfersEntity"/>
-        <mapping class="model.entities.UsersEntity"/>
+        <mapping class="model.entities.PasswordEntity"/>
+        <mapping class="model.entities.TransferEntity"/>
+        <mapping class="model.entities.UserEntity"/>
 
 
         <!-- DB schema will be updated if needed -->

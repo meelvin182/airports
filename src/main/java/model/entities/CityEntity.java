@@ -1,23 +1,34 @@
 package model.entities;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "cities", schema = "public", catalog = "airports")
-public class CitiesEntity {
+public class CityEntity {
     private int id;
     private String name;
-    private Collection<AirportsEntity> airportsById;
+    private List<AirportEntity> airports;
+
+    public CityEntity() {}
+    public CityEntity(String name) {
+        this.name = name;
+    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CityIdGenerator")
+    @SequenceGenerator(
+            initialValue = 1,
+            allocationSize = 1,
+            name = "CityIdGenerator",
+            sequenceName = "cities_id_seq"
+    )
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    protected void setId(int id) {
         this.id = id;
     }
 
@@ -36,7 +47,7 @@ public class CitiesEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CitiesEntity that = (CitiesEntity) o;
+        CityEntity that = (CityEntity) o;
 
         return name != null ? name.equals(that.name) : that.name == null;
     }
@@ -48,12 +59,12 @@ public class CitiesEntity {
         return result;
     }
 
-    @OneToMany(mappedBy = "citiesByCityId")
-    public Collection<AirportsEntity> getAirportsById() {
-        return airportsById;
+    @OneToMany(mappedBy = "city")
+    public List<AirportEntity> getAirports() {
+        return airports;
     }
 
-    public void setAirportsById(Collection<AirportsEntity> airportsById) {
-        this.airportsById = airportsById;
+    public void setAirports(List<AirportEntity> airportsById) {
+        this.airports = airportsById;
     }
 }

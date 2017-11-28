@@ -1,7 +1,7 @@
 package model.entities;
 
 import javax.persistence.*;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collection;
 
@@ -13,16 +13,33 @@ public class FlightEntity {
     private Integer airportToId;
     private Timestamp depatureTime;
     private Timestamp arrivalTime;
-    private BigInteger cost;
+    private BigDecimal cost;
     private String airline;
     private Boolean alwaysLate;
     private Short freePlace;
-    private AirportsEntity airportsByAirportFromId;
-    private AirportsEntity airportsByAirportToId;
-    private Collection<TransfersEntity> transfersById;
+    private AirportEntity airportFrom;
+    private AirportEntity airportTo;
+    private Collection<TransferEntity> transfers;
+
+    public FlightEntity() {}
+    public FlightEntity(AirportEntity airportFrom, AirportEntity airportTo, Timestamp depatureTime, Timestamp arrivalTime, BigDecimal cost) {
+        this.airportFrom = airportFrom;
+        this.airportFromId = airportFrom.getId();
+        this.airportTo = airportTo;
+        this.airportToId = airportTo.getId();
+        this.depatureTime = depatureTime;
+        this.arrivalTime = arrivalTime;
+        this.cost = cost;
+    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "FlightIdGenerator")
+    @SequenceGenerator(
+            initialValue = 1,
+            allocationSize = 1,
+            name = "FlightIdGenerator",
+            sequenceName = "flight_id_seq"
+    )
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -74,11 +91,11 @@ public class FlightEntity {
 
     @Basic
     @Column(name = "cost", nullable = true, precision = 0)
-    public BigInteger getCost() {
+    public BigDecimal getCost() {
         return cost;
     }
 
-    public void setCost(BigInteger cost) {
+    public void setCost(BigDecimal cost) {
         this.cost = cost;
     }
 
@@ -145,30 +162,30 @@ public class FlightEntity {
 
     @ManyToOne
     @JoinColumn(name = "airport_from_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public AirportsEntity getAirportsByAirportFromId() {
-        return airportsByAirportFromId;
+    public AirportEntity getAirportFrom() {
+        return airportFrom;
     }
 
-    public void setAirportsByAirportFromId(AirportsEntity airportsByAirportFromId) {
-        this.airportsByAirportFromId = airportsByAirportFromId;
+    public void setAirportFrom(AirportEntity airportsByAirportFromId) {
+        this.airportFrom = airportsByAirportFromId;
     }
 
     @ManyToOne
     @JoinColumn(name = "airport_to_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public AirportsEntity getAirportsByAirportToId() {
-        return airportsByAirportToId;
+    public AirportEntity getAirportTo() {
+        return airportTo;
     }
 
-    public void setAirportsByAirportToId(AirportsEntity airportsByAirportToId) {
-        this.airportsByAirportToId = airportsByAirportToId;
+    public void setAirportTo(AirportEntity airportsByAirportToId) {
+        this.airportTo = airportsByAirportToId;
     }
 
-    @OneToMany(mappedBy = "flightsByFlightId")
-    public Collection<TransfersEntity> getTransfersById() {
-        return transfersById;
+    @OneToMany(mappedBy = "flight")
+    public Collection<TransferEntity> getTransfers() {
+        return transfers;
     }
 
-    public void setTransfersById(Collection<TransfersEntity> transfersById) {
-        this.transfersById = transfersById;
+    public void setTransfers(Collection<TransferEntity> transfersById) {
+        this.transfers = transfersById;
     }
 }

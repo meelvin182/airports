@@ -4,12 +4,12 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "transfers", schema = "public", catalog = "airports")
-public class TransfersEntity {
+public class TransferEntity {
     private int id;
     private Integer flightId;
     private Integer airportWhereId;
-    private FlightEntity flightsByFlightId;
-    private AirportsEntity airportsByAirportWhereId;
+    private FlightEntity flight;
+    private AirportEntity airportIn;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -47,7 +47,7 @@ public class TransfersEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TransfersEntity that = (TransfersEntity) o;
+        TransferEntity that = (TransferEntity) o;
 
         return (flightId != null ? flightId.equals(that.flightId) : that.flightId == null) &&
                 (airportWhereId != null ? airportWhereId.equals(that.airportWhereId) : that.airportWhereId == null);
@@ -63,21 +63,21 @@ public class TransfersEntity {
 
     @ManyToOne
     @JoinColumn(name = "flight_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public FlightEntity getFlightsByFlightId() {
-        return flightsByFlightId;
+    public FlightEntity getFlight() {
+        return flight;
     }
 
-    public void setFlightsByFlightId(FlightEntity flightsByFlightId) {
-        this.flightsByFlightId = flightsByFlightId;
+    public void setFlight(FlightEntity flightsByFlightId) {
+        this.flight = flightsByFlightId;
     }
 
     @ManyToOne
     @JoinColumn(name = "airport_where_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public AirportsEntity getAirportsByAirportWhereId() {
-        return airportsByAirportWhereId;
+    public AirportEntity getAirportIn() {
+        return airportIn;
     }
 
-    public void setAirportsByAirportWhereId(AirportsEntity airportsByAirportWhereId) {
-        this.airportsByAirportWhereId = airportsByAirportWhereId;
+    public void setAirportIn(AirportEntity airportsByAirportWhereId) {
+        this.airportIn = airportsByAirportWhereId;
     }
 }

@@ -2,24 +2,38 @@ package model.entities;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 
 @Entity
 @Table(name = "airports", schema = "public", catalog = "airports")
-public class AirportsEntity {
+public class AirportEntity {
     private int id;
     private String name;
     private Integer cityId;
     private BigDecimal parallel;
     private BigDecimal meridian;
-    private CitiesEntity citiesByCityId;
-    private Collection<FlightEntity> flightsById;
-    private Collection<FlightEntity> flightsById_0;
-    private Collection<TransfersEntity> transfersById;
+    private CityEntity city;
+    private Collection<FlightEntity> flightsFrom;
+    private Collection<FlightEntity> flightsTo;
+    private Collection<TransferEntity> transfersIn;
+
+    public AirportEntity() {}
+    public AirportEntity(String name, CityEntity city, BigDecimal parallel, BigDecimal meridian) {
+        this.name = name;
+        this.city = city;
+        this.cityId = city.getId();
+        this.parallel = parallel;
+        this.meridian = meridian;
+    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "AirportIdGenerator")
+    @SequenceGenerator(
+            initialValue = 1,
+            allocationSize = 1,
+            name = "AirportIdGenerator",
+            sequenceName = "airports_id_seq"
+    )
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -45,7 +59,7 @@ public class AirportsEntity {
         return cityId;
     }
 
-    public void setCityId(Integer cityId) {
+    protected void setCityId(Integer cityId) {
         this.cityId = cityId;
     }
 
@@ -74,7 +88,7 @@ public class AirportsEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AirportsEntity that = (AirportsEntity) o;
+        AirportEntity that = (AirportEntity) o;
 
         return (name != null ? name.equals(that.name) : that.name == null) &&
                 (cityId != null ? cityId.equals(that.cityId) : that.cityId == null) &&
@@ -94,38 +108,39 @@ public class AirportsEntity {
 
     @ManyToOne
     @JoinColumn(name = "city_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public CitiesEntity getCitiesByCityId() {
-        return citiesByCityId;
+    public CityEntity getCity() {
+        return city;
     }
 
-    public void setCitiesByCityId(CitiesEntity citiesByCityId) {
-        this.citiesByCityId = citiesByCityId;
+    public void setCity(CityEntity citiesByCityId) {
+        this.city = citiesByCityId;
+        this.cityId = citiesByCityId.getId();
     }
 
-    @OneToMany(mappedBy = "airportsByAirportFromId")
-    public Collection<FlightEntity> getFlightsById() {
-        return flightsById;
+    @OneToMany(mappedBy = "airportFrom")
+    public Collection<FlightEntity> getFlightsFrom() {
+        return flightsFrom;
     }
 
-    public void setFlightsById(Collection<FlightEntity> flightsById) {
-        this.flightsById = flightsById;
+    public void setFlightsFrom(Collection<FlightEntity> flightsFrom) {
+        this.flightsFrom = flightsFrom;
     }
 
-    @OneToMany(mappedBy = "airportsByAirportToId")
-    public Collection<FlightEntity> getFlightsById_0() {
-        return flightsById_0;
+    @OneToMany(mappedBy = "airportTo")
+    public Collection<FlightEntity> getFlightsTo() {
+        return flightsTo;
     }
 
-    public void setFlightsById_0(Collection<FlightEntity> flightsById_0) {
-        this.flightsById_0 = flightsById_0;
+    public void setFlightsTo(Collection<FlightEntity> flightsTo) {
+        this.flightsTo = flightsTo;
     }
 
-    @OneToMany(mappedBy = "airportsByAirportWhereId")
-    public Collection<TransfersEntity> getTransfersById() {
-        return transfersById;
+    @OneToMany(mappedBy = "airportIn")
+    public Collection<TransferEntity> getTransfersIn() {
+        return transfersIn;
     }
 
-    public void setTransfersById(Collection<TransfersEntity> transfersById) {
-        this.transfersById = transfersById;
+    public void setTransfersIn(Collection<TransferEntity> transfersIn) {
+        this.transfersIn = transfersIn;
     }
 }
