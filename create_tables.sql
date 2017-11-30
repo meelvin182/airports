@@ -32,10 +32,6 @@ CREATE TABLE IF NOT EXISTS transfers (
 CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   login VARCHAR(46),
-  user_role VARCHAR(10)
-);
-
-CREATE TABLE IF NOT EXISTS passwords (
-  id SERIAL PRIMARY KEY REFERENCES users,
+  user_role VARCHAR(10),
   password text
 );
