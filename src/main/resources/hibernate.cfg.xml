@@ -16,7 +16,6 @@
         <mapping class="model.entities.AirportEntity"/>
         <mapping class="model.entities.CityEntity"/>
         <mapping class="model.entities.FlightEntity"/>
-        <mapping class="model.entities.PasswordEntity"/>
         <mapping class="model.entities.TransferEntity"/>
         <mapping class="model.entities.UserEntity"/>
 

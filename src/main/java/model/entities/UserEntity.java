@@ -7,11 +7,23 @@ import javax.persistence.*;
 public class UserEntity {
     private int id;
     private String login;
-    private String userRole;
-    private PasswordEntity passwordById;
+    private String userRole = "USER";
+    private String password;
+
+    public UserEntity() {}
+    public UserEntity(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "UserIdGenerator")
+    @SequenceGenerator(
+            initialValue = 1,
+            allocationSize = 1,
+            name = "UserIdGenerator",
+            sequenceName = "users_id_seq"
+    )
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -41,6 +53,16 @@ public class UserEntity {
         this.userRole = userRole;
     }
 
+    @Basic
+    @Column(name = "password", nullable = true, length = -1)
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -58,14 +80,5 @@ public class UserEntity {
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (userRole != null ? userRole.hashCode() : 0);
         return result;
-    }
-
-    @OneToOne(mappedBy = "userById")
-    public PasswordEntity getPasswordById() {
-        return passwordById;
-    }
-
-    public void setPasswordById(PasswordEntity passwordsById) {
-        this.passwordById = passwordsById;
     }
 }

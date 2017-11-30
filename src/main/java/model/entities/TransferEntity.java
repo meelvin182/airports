@@ -11,8 +11,23 @@ public class TransferEntity {
     private FlightEntity flight;
     private AirportEntity airportIn;
 
+    public TransferEntity(){}
+
+    public TransferEntity(FlightEntity flight, AirportEntity airportIn) {
+        this.flight = flight;
+        this.flightId = flight.getId();
+        this.airportIn = airportIn;
+        this.airportWhereId = airportIn.getId();
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TransferIdGenerator")
+    @SequenceGenerator(
+            initialValue = 1,
+            allocationSize = 1,
+            name = "TransferIdGenerator",
+            sequenceName = "transfers_id_seq"
+    )
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
@@ -28,7 +43,7 @@ public class TransferEntity {
         return flightId;
     }
 
-    public void setFlightId(Integer flightId) {
+    protected void setFlightId(Integer flightId) {
         this.flightId = flightId;
     }
 
@@ -38,7 +53,7 @@ public class TransferEntity {
         return airportWhereId;
     }
 
-    public void setAirportWhereId(Integer airportWhereId) {
+    protected void setAirportWhereId(Integer airportWhereId) {
         this.airportWhereId = airportWhereId;
     }
 

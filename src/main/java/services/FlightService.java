@@ -1,6 +1,7 @@
 package services;
 
 import model.entities.FlightEntity;
+import model.entities.TransferEntity;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import utils.HibernateUtil;
@@ -21,22 +22,6 @@ public class FlightService extends AbstractService<FlightEntity>{
         calendar.add(Calendar.DATE, 1);
         Timestamp dateFor = new Timestamp(calendar.getTimeInMillis());
 
-        /*SQLQuery query1 = HibernateUtil.getCurrentSession()
-                .createSQLQuery("SELECT * FROM flights WHERE\n" +
-                        " flights.airport_from_id IN\n" +
-                        " (SELECT airports.id FROM airports\n" +
-                        " WHERE airports.city_id =\n" +
-                        " (SELECT cities.id FROM cities\n" +
-                        " WHERE cities.name = :cityFrom))\n" +
-                        " AND flights.airport_to_id IN\n" +
-                        " (SELECT airports.id FROM airports\n" +
-                        " WHERE airports.city_id =\n" +
-                        " (SELECT cities.id FROM cities\n" +
-                        " WHERE cities.name = :cityTo))\n" +
-                        " AND depature_time >= :date" +
-                        " AND depature_time <= :dateFor\n"+
-                        " AND cost<= :hCost"
-                );*/
         Query query = HibernateUtil.getCurrentSession()
                 .createQuery("select flight from FlightEntity flight " +
                         "where flight.airportFromId in " +
@@ -59,5 +44,15 @@ public class FlightService extends AbstractService<FlightEntity>{
         query.setParameter("hCost", cost);
         List<FlightEntity> list = (List<FlightEntity>) query.list();
         return list;
+    }
+
+    @Override
+    public void remove(FlightEntity entity) {
+        if (entity.getTransfers() != null) {
+            for (TransferEntity transfer : entity.getTransfers()) {
+                HibernateUtil.getCurrentSession().delete(transfer);
+            }
+        }
+        super.remove(entity);
     }
 }

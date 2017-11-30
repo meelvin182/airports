@@ -3,6 +3,7 @@ package model.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "airports", schema = "public", catalog = "airports")
@@ -13,9 +14,9 @@ public class AirportEntity {
     private BigDecimal parallel;
     private BigDecimal meridian;
     private CityEntity city;
-    private Collection<FlightEntity> flightsFrom;
-    private Collection<FlightEntity> flightsTo;
-    private Collection<TransferEntity> transfersIn;
+    private List<FlightEntity> flightsFrom;
+    private List<FlightEntity> flightsTo;
+    private List<TransferEntity> transfersIn;
 
     public AirportEntity() {}
     public AirportEntity(String name, CityEntity city, BigDecimal parallel, BigDecimal meridian) {
@@ -118,29 +119,29 @@ public class AirportEntity {
     }
 
     @OneToMany(mappedBy = "airportFrom")
-    public Collection<FlightEntity> getFlightsFrom() {
+    public List<FlightEntity> getFlightsFrom() {
         return flightsFrom;
     }
 
-    public void setFlightsFrom(Collection<FlightEntity> flightsFrom) {
+    public void setFlightsFrom(List<FlightEntity> flightsFrom) {
         this.flightsFrom = flightsFrom;
     }
 
     @OneToMany(mappedBy = "airportTo")
-    public Collection<FlightEntity> getFlightsTo() {
+    public List<FlightEntity> getFlightsTo() {
         return flightsTo;
     }
 
-    public void setFlightsTo(Collection<FlightEntity> flightsTo) {
+    public void setFlightsTo(List<FlightEntity> flightsTo) {
         this.flightsTo = flightsTo;
     }
 
     @OneToMany(mappedBy = "airportIn")
-    public Collection<TransferEntity> getTransfersIn() {
+    public List<TransferEntity> getTransfersIn() {
         return transfersIn;
     }
 
-    public void setTransfersIn(Collection<TransferEntity> transfersIn) {
+    public void setTransfersIn(List<TransferEntity> transfersIn) {
         this.transfersIn = transfersIn;
     }
 }

@@ -3,7 +3,7 @@ package model.entities;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "flights", schema = "public", catalog = "airports")
@@ -19,7 +19,7 @@ public class FlightEntity {
     private Short freePlace;
     private AirportEntity airportFrom;
     private AirportEntity airportTo;
-    private Collection<TransferEntity> transfers;
+    private List<TransferEntity> transfers;
 
     public FlightEntity() {}
     public FlightEntity(AirportEntity airportFrom, AirportEntity airportTo, Timestamp depatureTime, Timestamp arrivalTime, BigDecimal cost) {
@@ -181,11 +181,11 @@ public class FlightEntity {
     }
 
     @OneToMany(mappedBy = "flight")
-    public Collection<TransferEntity> getTransfers() {
+    public List<TransferEntity> getTransfers() {
         return transfers;
     }
 
-    public void setTransfers(Collection<TransferEntity> transfersById) {
+    public void setTransfers(List<TransferEntity> transfersById) {
         this.transfers = transfersById;
     }
 }
