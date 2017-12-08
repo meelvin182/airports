@@ -1,48 +1,58 @@
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.metadata.ClassMetadata;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import model.entities.FlightEntity;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import service.FlightService;
+import util.HibernateUtil;
 
-import java.util.Map;
+import java.io.FileWriter;
+import java.io.Writer;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.List;
 
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan(basePackages = "controller")
 public class Main {
-    private static final SessionFactory ourSessionFactory;
+    private static FlightService flightService = new FlightService();
 
-    static {
+    public static void main(final String[] args) {
+        SpringApplication.run(Main.class, args);
+        /*FlightRequest request = new FlightRequest("aaa", "bbb", "1999-12-12 00:00:00", 0.5);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(request);
+        Writer writer = new FileWriter("flights.json");
+        writer.write(json);
+        writer.close();*/
+        /*Gson gson = new Gson();
+        JsonReader reader = new JsonReader(new FileReader("flights.json"));
+        FlightRequest requests = gson.fromJson(reader, FlightRequest.class);
+        reader.close();
+        System.out.println(requests);*/
+        /*
         try {
-            Configuration configuration = new Configuration();
-            configuration.configure();
-            ourSessionFactory = configuration.buildSessionFactory();
-        } catch (Throwable ex) {
-            throw new ExceptionInInitializerError(ex);
+            HibernateUtil.getCurrentSession().beginTransaction();
+            List<FlightEntity> filter = flightService.getWithFilter(
+                    "Москва",
+                    "Анапа",
+                    Timestamp.valueOf("3018-10-10 00:00:00"),
+                    new BigDecimal("1331.13")
+            );
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            String json = gson.toJson(filter);
+            Writer writer = new FileWriter("flights_arr.json");
+            writer.write(json);
+            writer.close();
         }
-    }
-
-    public static Session getSession() throws HibernateException {
-        return ourSessionFactory.openSession();
-    }
-
-    public static void main(final String[] args) throws Exception {
-        final Session session = getSession();
-        try {
-            System.out.println("querying all the managed entities...");
-            final Map metadataMap = session.getSessionFactory().getAllClassMetadata();
-            for (Object key : metadataMap.keySet()) {
-                final ClassMetadata classMetadata = (ClassMetadata) metadataMap.get(key);
-                final String entityName = classMetadata.getEntityName();
-                final Query query = session.createQuery("from " + entityName);
-                System.out.println("executing: " + query.getQueryString());
-                for (Object o : query.list()) {
-                    System.out.println("  " + o);
-                }
-            }
-            System.out.println("end");
-        } finally {
-            System.out.println("end end");
-            session.close();
-            System.out.println("end end end");
-        }
+        catch (Exception exc) {
+            System.out.println(exc.toString());
+        }*/
     }
 }

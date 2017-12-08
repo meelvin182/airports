@@ -1,10 +1,14 @@
 package model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.google.gson.annotations.Expose;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
+@JsonIgnoreProperties(value = "transfers")
 @Entity
 @Table(name = "flights", schema = "public", catalog = "airports")
 public class FlightEntity {
@@ -17,16 +21,16 @@ public class FlightEntity {
     private String airline;
     private Boolean alwaysLate;
     private Short freePlace;
-    private AirportEntity airportFrom;
-    private AirportEntity airportTo;
+    private AirportEntity airportFromObject;
+    private AirportEntity airportToObject;
     private List<TransferEntity> transfers;
 
     public FlightEntity() {}
-    public FlightEntity(AirportEntity airportFrom, AirportEntity airportTo, Timestamp depatureTime, Timestamp arrivalTime, BigDecimal cost) {
-        this.airportFrom = airportFrom;
-        this.airportFromId = airportFrom.getId();
-        this.airportTo = airportTo;
-        this.airportToId = airportTo.getId();
+    public FlightEntity(AirportEntity airportFromObject, AirportEntity airportToObject, Timestamp depatureTime, Timestamp arrivalTime, BigDecimal cost) {
+        this.airportFromObject = airportFromObject;
+        this.airportFromId = airportFromObject.getId();
+        this.airportToObject = airportToObject;
+        this.airportToId = airportToObject.getId();
         this.depatureTime = depatureTime;
         this.arrivalTime = arrivalTime;
         this.cost = cost;
@@ -162,22 +166,22 @@ public class FlightEntity {
 
     @ManyToOne
     @JoinColumn(name = "airport_from_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public AirportEntity getAirportFrom() {
-        return airportFrom;
+    public AirportEntity getAirportFromObject() {
+        return airportFromObject;
     }
 
-    public void setAirportFrom(AirportEntity airportsByAirportFromId) {
-        this.airportFrom = airportsByAirportFromId;
+    public void setAirportFromObject(AirportEntity airportsByAirportFromId) {
+        this.airportFromObject = airportsByAirportFromId;
     }
 
     @ManyToOne
     @JoinColumn(name = "airport_to_id", referencedColumnName = "id", insertable = false, updatable = false)
-    public AirportEntity getAirportTo() {
-        return airportTo;
+    public AirportEntity getAirportToObject() {
+        return airportToObject;
     }
 
-    public void setAirportTo(AirportEntity airportsByAirportToId) {
-        this.airportTo = airportsByAirportToId;
+    public void setAirportToObject(AirportEntity airportsByAirportToId) {
+        this.airportToObject = airportsByAirportToId;
     }
 
     @OneToMany(mappedBy = "flight")

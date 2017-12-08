@@ -1,9 +1,9 @@
-package services;
+package service;
 
 import java.io.Serializable;
 import java.util.List;
 
-import static utils.HibernateUtil.getCurrentSession;
+import static util.HibernateUtil.getCurrentSession;
 
 abstract public class AbstractService<T> {
     private Class<T> typeParameterClass;

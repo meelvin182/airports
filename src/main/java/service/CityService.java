@@ -1,7 +1,7 @@
-package services;
+package service;
 
 import model.entities.CityEntity;
-import utils.HibernateUtil;
+import util.HibernateUtil;
 
 public class CityService extends AbstractService<CityEntity>{
     public CityService() {

@@ -1,10 +1,10 @@
-package services;
+package service;
 
 import model.entities.CityEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.HibernateUtil;
+import util.HibernateUtil;
 
 import java.io.Serializable;
 import java.util.List;

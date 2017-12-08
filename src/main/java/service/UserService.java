@@ -1,11 +1,11 @@
-package services;
+package service;
 
 import model.entities.UserEntity;
-import utils.HibernateUtil;
+import util.HibernateUtil;
 
 import java.io.Serializable;
 
-import static utils.HibernateUtil.getCurrentSession;
+import static util.HibernateUtil.getCurrentSession;
 
 public class UserService {
     public Serializable add(UserEntity entity) {

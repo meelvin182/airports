@@ -1,4 +1,4 @@
-package services;
+package service;
 
 import model.entities.AirportEntity;
 import model.entities.CityEntity;
@@ -6,7 +6,8 @@ import model.entities.FlightEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.HibernateUtil;
+import org.springframework.stereotype.Service;
+import util.HibernateUtil;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Service
 class FlightServiceTest {
     private FlightService flightService = new FlightService();
     private AirportService airportService = new AirportService();
@@ -63,13 +65,13 @@ class FlightServiceTest {
                     Timestamp.valueOf("3018-10-10 13:13:13"),
                     new BigDecimal("1313.13")));
 
-            for (FlightEntity fl : flights) {
+            /*for (FlightEntity fl : flights) {
                 flightService.add(fl);
             }
             for (FlightEntity fl : wrFl) {
                 flightService.add(fl);
             }
-            HibernateUtil.getCurrentSession().flush();
+            HibernateUtil.getCurrentSession().flush();*/
             try {
                 List<FlightEntity> filter = flightService.getWithFilter(
                         "Москва",

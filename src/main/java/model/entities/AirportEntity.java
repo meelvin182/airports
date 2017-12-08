@@ -1,10 +1,12 @@
 package model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Collection;
 import java.util.List;
 
+@JsonIgnoreProperties(value = {"flightsFrom", "flightsTo", "transfersIn"})
 @Entity
 @Table(name = "airports", schema = "public", catalog = "airports")
 public class AirportEntity {
@@ -118,7 +120,7 @@ public class AirportEntity {
         this.cityId = citiesByCityId.getId();
     }
 
-    @OneToMany(mappedBy = "airportFrom")
+    @OneToMany(mappedBy = "airportFromObject")
     public List<FlightEntity> getFlightsFrom() {
         return flightsFrom;
     }
@@ -127,7 +129,7 @@ public class AirportEntity {
         this.flightsFrom = flightsFrom;
     }
 
-    @OneToMany(mappedBy = "airportTo")
+    @OneToMany(mappedBy = "airportToObject")
     public List<FlightEntity> getFlightsTo() {
         return flightsTo;
     }

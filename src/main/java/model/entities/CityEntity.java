@@ -1,8 +1,11 @@
 package model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
+@JsonIgnoreProperties(value = "airports")
 @Entity
 @Table(name = "cities", schema = "public", catalog = "airports")
 public class CityEntity {

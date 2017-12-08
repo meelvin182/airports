@@ -1,4 +1,4 @@
-package services;
+package service;
 
 import model.entities.AirportEntity;
 import model.entities.FlightEntity;
@@ -6,11 +6,9 @@ import model.entities.TransferEntity;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import utils.HibernateUtil;
+import util.HibernateUtil;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 import static org.junit.jupiter.api.Assertions.*;
 

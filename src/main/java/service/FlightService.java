@@ -1,10 +1,9 @@
-package services;
+package service;
 
 import model.entities.FlightEntity;
 import model.entities.TransferEntity;
 import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import utils.HibernateUtil;
+import util.HibernateUtil;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
