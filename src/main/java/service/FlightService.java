@@ -4,6 +4,7 @@ import model.entities.FlightEntity;
 import model.entities.TransferEntity;
 import org.hibernate.Query;
 import util.HibernateUtil;
+import util.TimestampWorker;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -15,9 +16,40 @@ public class FlightService extends AbstractService<FlightEntity>{
         super(FlightEntity.class);
     }
 
+    public List<FlightEntity> getFromDate (Timestamp date) {
+        Timestamp dateFrom = TimestampWorker.resetTime(date);
+        Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
+
+        Query query = HibernateUtil.getCurrentSession()
+                .createQuery("select flight from FlightEntity flight " +
+                        "where flight.depatureTime >= :date and " +
+                        "flight.depatureTime <= :dateFor");
+        query.setParameter("date", dateFrom);
+        query.setParameter("dateFor", dateFor);
+
+        return (List<FlightEntity>) query.list();
+    }
+
+    public void removeFromDate(Timestamp date) {
+        Timestamp dateFrom = TimestampWorker.resetTime(date);
+        Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
+
+        Query query = HibernateUtil.getCurrentSession()
+                .createQuery("delete from FlightEntity flight " +
+                        "where flight.depatureTime >= :date and " +
+                        "flight.depatureTime <= :dateFor");
+        query.setParameter("date", dateFrom);
+        query.setParameter("dateFor", dateFor);
+        query.executeUpdate();
+    }
+
     public List<FlightEntity> getWithFilter(String cityFrom, String cityTo, Timestamp date, BigDecimal cost) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.DATE, 1);
         Timestamp dateFor = new Timestamp(calendar.getTimeInMillis());
 

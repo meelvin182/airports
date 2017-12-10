@@ -35,6 +35,53 @@ class FlightServiceTest {
     }
 
     @Test
+    void getFromDate() {
+        try {
+            FlightEntity flight = new FlightEntity(airportService.getAirportByName("Домодедово"),
+                    airportService.getAirportByName("Витязево"),
+                    Timestamp.valueOf("3018-10-10 00:13:13"),
+                    Timestamp.valueOf("3018-10-10 13:13:13"),
+                    new BigDecimal("1313.13"));
+            flightService.add(flight);
+
+            Timestamp date = Timestamp.valueOf("3018-10-10 00:00:00");
+            List<FlightEntity> list = flightService.getFromDate(date);
+            assertEquals(list.size(), 1);
+            for (FlightEntity fl : list) {
+                flightService.remove(fl);
+            }
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
+    }
+
+    @Test
+    void removeFromDate() {
+        try {
+            FlightEntity flight = new FlightEntity(airportService.getAirportByName("Домодедово"),
+                    airportService.getAirportByName("Витязево"),
+                    Timestamp.valueOf("3018-10-10 00:13:13"),
+                    Timestamp.valueOf("3018-10-10 13:13:13"),
+                    new BigDecimal("1313.13"));
+            flightService.add(flight);
+
+            Timestamp date = Timestamp.valueOf("3018-10-10 00:00:00");
+
+            flightService.removeFromDate(date);
+            HibernateUtil.getCurrentSession().flush();
+            List<FlightEntity> list = flightService.getFromDate(date);
+            assertEquals(list.size(), 0);
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
+
+    }
+
+    @Test
     void getWithFilter() {
         try {
             List<FlightEntity> flights = new ArrayList<>();
@@ -65,13 +112,13 @@ class FlightServiceTest {
                     Timestamp.valueOf("3018-10-10 13:13:13"),
                     new BigDecimal("1313.13")));
 
-            /*for (FlightEntity fl : flights) {
+            for (FlightEntity fl : flights) {
                 flightService.add(fl);
             }
             for (FlightEntity fl : wrFl) {
                 flightService.add(fl);
             }
-            HibernateUtil.getCurrentSession().flush();*/
+            HibernateUtil.getCurrentSession().flush();
             try {
                 List<FlightEntity> filter = flightService.getWithFilter(
                         "Москва",
