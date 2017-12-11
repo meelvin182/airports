@@ -21,24 +21,25 @@ public class FlightForDateLoader {
 
         Airline[] airlines = Airline.values();
 
-        for (int i = 0; i < 100; i++) {
-            ThreadLocalRandom tr = ThreadLocalRandom.current();
-            AirportEntity airportFrom = airports.get(tr.nextInt(airports.size()));
-            AirportEntity airportTo = airports.get(tr.nextInt(airports.size()));
-            while (airportTo == airportFrom) {
-                airportTo = airports.get(tr.nextInt(airports.size()));
-            }
+        for (AirportEntity airportFrom : airports) {
+            for (int i = 0; i < 30; i++) {
+                ThreadLocalRandom tr = ThreadLocalRandom.current();
+                AirportEntity airportTo = airports.get(tr.nextInt(airports.size()));
+                while (airportTo == airportFrom) {
+                    airportTo = airports.get(tr.nextInt(airports.size()));
+                }
 
-            Timestamp dateFrom = TimestampWorker.addHours(dateInit, tr.nextInt(23));
-            Timestamp dateFor = TimestampWorker.addHours(dateFrom, tr.nextInt(10));
-            BigDecimal cost = new BigDecimal(tr.nextInt(70000));
-            FlightEntity flight = new FlightEntity(
-                    airportFrom, airportTo, dateFrom, dateFor, cost
-            );
-            flight.setAirline(airlines[tr.nextInt(airlines.length)].getName());
-            flight.setAlwaysLate(tr.nextBoolean());
-            flight.setFreePlace(new Short(String.valueOf(tr.nextInt(50))));
-            flightService.add(flight);
+                Timestamp dateFrom = TimestampWorker.addMinutes(dateInit, tr.nextInt(23*60));
+                Timestamp dateFor = TimestampWorker.addMinutes(dateFrom, tr.nextInt(10*60));
+                BigDecimal cost = new BigDecimal(tr.nextInt(70000) + 1);
+                FlightEntity flight = new FlightEntity(
+                        airportFrom, airportTo, dateFrom, dateFor, cost
+                );
+                flight.setAirline(airlines[tr.nextInt(airlines.length)].getName());
+                flight.setAlwaysLate(tr.nextBoolean());
+                flight.setFreePlace(new Short(String.valueOf(tr.nextInt(50))));
+                flightService.add(flight);
+            }
         }
     }
 

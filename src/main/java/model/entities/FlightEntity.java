@@ -8,7 +8,8 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-@JsonIgnoreProperties(value = "transfers")
+@JsonIgnoreProperties(value = {"transfers", "id", "airportFromId"})
+
 @Entity
 @Table(name = "flights", schema = "public", catalog = "airports")
 public class FlightEntity {

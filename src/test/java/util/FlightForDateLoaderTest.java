@@ -31,7 +31,7 @@ class FlightForDateLoaderTest {
         Timestamp date = Timestamp.valueOf("3018-10-10 00:13:13");
         flightForDateLoader.loadFlightForDate(date);
         List<FlightEntity> flights = flightService.getFromDate(date);
-        assertEquals(flights.size(), 100);
+        assertEquals(flights.size(), 4290);
         for (FlightEntity flightEntity : flights) {
             flightService.remove(flightEntity);
         }
@@ -40,6 +40,7 @@ class FlightForDateLoaderTest {
     @Test
     void removeFlightForDate() {
         Timestamp date = new Timestamp(System.currentTimeMillis());
+        //Timestamp date = Timestamp.valueOf("3018-10-10 00:13:13");
         flightForDateLoader.loadFlightForDate(date);
         flightForDateLoader.removeFlightForDate(date);
         HibernateUtil.getCurrentSession().flush();

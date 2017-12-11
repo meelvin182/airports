@@ -14,9 +14,9 @@ public class TimestampWorker {
         calendar.set(Calendar.MILLISECOND, 0);
         return new Timestamp(calendar.getTimeInMillis());
     }
-    public static Timestamp addHours(Timestamp dateTime, int hours) {
+    public static Timestamp addMinutes(Timestamp dateTime, int mins) {
         calendar.setTime(dateTime);
-        calendar.add(Calendar.HOUR, hours);
+        calendar.add(Calendar.MINUTE, mins);
         return new Timestamp(calendar.getTimeInMillis());
     }
     public static Timestamp addDays(Timestamp dateTime, int days) {

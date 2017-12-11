@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@JsonIgnoreProperties(value = {"flightsFrom", "flightsTo", "transfersIn"})
+@JsonIgnoreProperties(value = {"id", "cityId", "flightsFrom", "flightsTo", "transfersIn"})
 @Entity
 @Table(name = "airports", schema = "public", catalog = "airports")
 public class AirportEntity {
@@ -20,6 +20,8 @@ public class AirportEntity {
     private List<FlightEntity> flightsTo;
     private List<TransferEntity> transfersIn;
 
+    private String cityName;
+
     public AirportEntity() {}
     public AirportEntity(String name, CityEntity city, BigDecimal parallel, BigDecimal meridian) {
         this.name = name;
@@ -27,6 +29,7 @@ public class AirportEntity {
         this.cityId = city.getId();
         this.parallel = parallel;
         this.meridian = meridian;
+        this.cityName = city.getName();
     }
 
     @Id
@@ -109,7 +112,7 @@ public class AirportEntity {
         return result;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "city_id", referencedColumnName = "id", insertable = false, updatable = false)
     public CityEntity getCity() {
         return city;
@@ -118,6 +121,7 @@ public class AirportEntity {
     public void setCity(CityEntity citiesByCityId) {
         this.city = citiesByCityId;
         this.cityId = citiesByCityId.getId();
+        this.cityName = citiesByCityId.getName();
     }
 
     @OneToMany(mappedBy = "airportFromObject")
@@ -145,5 +149,14 @@ public class AirportEntity {
 
     public void setTransfersIn(List<TransferEntity> transfersIn) {
         this.transfersIn = transfersIn;
+    }
+
+    @Transient
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }
