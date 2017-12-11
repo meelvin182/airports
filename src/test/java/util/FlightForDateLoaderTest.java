@@ -15,20 +15,10 @@ class FlightForDateLoaderTest {
     private FlightForDateLoader flightForDateLoader = new FlightForDateLoader();
     private FlightService flightService = new FlightService();
 
-    @BeforeEach
-    void setUp() {
-        HibernateUtil.getCurrentSession().beginTransaction();
-    }
-
-    @AfterEach
-    void tearDown() {
-        HibernateUtil.getCurrentSession().getTransaction().commit();
-    }
-
     @Test
     void loadFlightForDate() {
-        //Timestamp date = new Timestamp(System.currentTimeMillis());
-        Timestamp date = Timestamp.valueOf("3018-10-10 00:13:13");
+        Timestamp date = new Timestamp(System.currentTimeMillis());
+        //Timestamp date = Timestamp.valueOf("3018-10-10 00:13:13");
         flightForDateLoader.loadFlightForDate(date);
         List<FlightEntity> flights = flightService.getFromDate(date);
         assertEquals(flights.size(), 4290);

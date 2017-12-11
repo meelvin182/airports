@@ -185,7 +185,7 @@ public class FlightEntity {
         this.airportToObject = airportsByAirportToId;
     }
 
-    @OneToMany(mappedBy = "flight")
+    @OneToMany(mappedBy = "flight", fetch = FetchType.EAGER)
     public List<TransferEntity> getTransfers() {
         return transfers;
     }

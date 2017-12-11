@@ -13,16 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
     private UserService userService = new UserService();
 
-    @BeforeEach
-    void setUp() {
-        HibernateUtil.getCurrentSession().beginTransaction();
-    }
-
-    @AfterEach
-    void tearDown() {
-        HibernateUtil.getCurrentSession().getTransaction().commit();
-    }
-
     @Test
     void add() {
         try {

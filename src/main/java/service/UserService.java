@@ -16,11 +16,13 @@ public class UserService {
     }
 
     public UserEntity getUserByLogin(String login) {
+        HibernateUtil.getCurrentSession().beginTransaction();
         UserEntity user = (UserEntity) HibernateUtil.getCurrentSession()
                 .createQuery("SELECT user FROM UserEntity user " +
                         "WHERE user.login = :login")
                 .setString("login", login)
                 .uniqueResult();
+        HibernateUtil.getCurrentSession().getTransaction().commit();
         return user;
     }
 }

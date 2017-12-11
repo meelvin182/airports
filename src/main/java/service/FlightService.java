@@ -17,73 +17,99 @@ public class FlightService extends AbstractService<FlightEntity>{
     }
 
     public List<FlightEntity> getFromDate (Timestamp date) {
-        Timestamp dateFrom = TimestampWorker.resetTime(date);
-        Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
+        try {
+            HibernateUtil.getCurrentSession().beginTransaction();
+            Timestamp dateFrom = TimestampWorker.resetTime(date);
+            Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
 
-        Query query = HibernateUtil.getCurrentSession()
-                .createQuery("select flight from FlightEntity flight " +
-                        "where flight.depatureTime >= :date and " +
-                        "flight.depatureTime <= :dateFor");
-        query.setParameter("date", dateFrom);
-        query.setParameter("dateFor", dateFor);
-
-        return (List<FlightEntity>) query.list();
+            Query query = HibernateUtil.getCurrentSession()
+                    .createQuery("select flight from FlightEntity flight " +
+                            "where flight.depatureTime >= :date and " +
+                            "flight.depatureTime <= :dateFor");
+            query.setParameter("date", dateFrom);
+            query.setParameter("dateFor", dateFor);
+            List<FlightEntity> list = (List<FlightEntity>) query.list();
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+            return list;
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
     }
 
     public void removeFromDate(Timestamp date) {
-        Timestamp dateFrom = TimestampWorker.resetTime(date);
-        Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
+        try {
+            HibernateUtil.getCurrentSession().beginTransaction();
+            Timestamp dateFrom = TimestampWorker.resetTime(date);
+            Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
 
-        Query query = HibernateUtil.getCurrentSession()
-                .createQuery("delete from FlightEntity flight " +
-                        "where flight.depatureTime >= :date and " +
-                        "flight.depatureTime <= :dateFor");
-        query.setParameter("date", dateFrom);
-        query.setParameter("dateFor", dateFor);
-        query.executeUpdate();
+            Query query = HibernateUtil.getCurrentSession()
+                    .createQuery("delete from FlightEntity flight " +
+                            "where flight.depatureTime >= :date and " +
+                            "flight.depatureTime <= :dateFor");
+            query.setParameter("date", dateFrom);
+            query.setParameter("dateFor", dateFor);
+            query.executeUpdate();
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
     }
 
     public List<FlightEntity> getWithFilter(String cityFrom, String cityTo, Timestamp date, BigDecimal cost) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.add(Calendar.DATE, 1);
-        Timestamp dateFor = new Timestamp(calendar.getTimeInMillis());
+        try {
+            HibernateUtil.getCurrentSession().beginTransaction();
+            Timestamp dateFrom = TimestampWorker.resetTime(date);
+            Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
 
-        Query query = HibernateUtil.getCurrentSession()
-                .createQuery("select flight from FlightEntity flight " +
-                        "where flight.airportFromId in " +
-                        "(select airport.id from AirportEntity airport " +
-                        "where airport.cityId = " +
-                        "(select city.id from CityEntity city " +
-                        "where city.name = :cityFrom)) " +
-                        "and flight.airportToId in " +
-                        "(select airport.id from AirportEntity airport " +
-                        "where airport.cityId = " +
-                        "(select city.id from CityEntity city " +
-                        "where city.name = :cityTo)) " +
-                        "and flight.depatureTime >= :date " +
-                        "and flight.depatureTime <= :dateFor " +
-                        "and flight.cost <= :hCost");
-        query.setString("cityFrom", cityFrom);
-        query.setString("cityTo", cityTo);
-        query.setParameter("date", date);
-        query.setParameter("dateFor", dateFor);
-        query.setParameter("hCost", cost);
-        List<FlightEntity> list = (List<FlightEntity>) query.list();
-        return list;
+            Query query = HibernateUtil.getCurrentSession()
+                    .createQuery("select flight from FlightEntity flight " +
+                            "where flight.airportFromId in " +
+                            "(select airport.id from AirportEntity airport " +
+                            "where airport.cityId = " +
+                            "(select city.id from CityEntity city " +
+                            "where city.name = :cityFrom)) " +
+                            "and flight.airportToId in " +
+                            "(select airport.id from AirportEntity airport " +
+                            "where airport.cityId = " +
+                            "(select city.id from CityEntity city " +
+                            "where city.name = :cityTo)) " +
+                            "and flight.depatureTime >= :date " +
+                            "and flight.depatureTime <= :dateFor " +
+                            "and flight.cost <= :hCost");
+            query.setString("cityFrom", cityFrom);
+            query.setString("cityTo", cityTo);
+            query.setParameter("date", dateFrom);
+            query.setParameter("dateFor", dateFor);
+            query.setParameter("hCost", cost);
+            List<FlightEntity> list = (List<FlightEntity>) query.list();
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+            return list;
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
     }
 
     @Override
     public void remove(FlightEntity entity) {
-        if (entity.getTransfers() != null) {
-            for (TransferEntity transfer : entity.getTransfers()) {
-                HibernateUtil.getCurrentSession().delete(transfer);
+        try {
+            HibernateUtil.getCurrentSession().beginTransaction();
+            if (entity.getTransfers() != null) {
+                for (TransferEntity transfer : entity.getTransfers()) {
+                    HibernateUtil.getCurrentSession().delete(transfer);
+                }
             }
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+            super.remove(entity);
         }
-        super.remove(entity);
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
     }
 }

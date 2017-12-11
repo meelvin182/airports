@@ -1,5 +1,7 @@
 package service;
 
+import util.HibernateUtil;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,18 +15,40 @@ abstract public class AbstractService<T> {
     }
 
     public Serializable add(T entity) {
-        return getCurrentSession().save(entity);
+        try {
+            HibernateUtil.getCurrentSession().beginTransaction();
+            Serializable serializable = getCurrentSession().save(entity);
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+            return serializable;
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
     }
 
     public List<T> getAll() {
-        return (List<T>) getCurrentSession().createCriteria(typeParameterClass).list();
-    }
-
-    public void update(T entity) {
-        getCurrentSession().update(entity);
+        try {
+            HibernateUtil.getCurrentSession().beginTransaction();
+            List<T> list = (List<T>) getCurrentSession().createCriteria(typeParameterClass).list();
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+            return list;
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
     }
 
     public void remove(T entity) {
-        getCurrentSession().delete(entity);
+        try {
+            HibernateUtil.getCurrentSession().beginTransaction();
+            getCurrentSession().delete(entity);
+            HibernateUtil.getCurrentSession().getTransaction().commit();
+        }
+        catch (Exception exc) {
+            HibernateUtil.getCurrentSession().getTransaction().rollback();
+            throw exc;
+        }
     }
 }

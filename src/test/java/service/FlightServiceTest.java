@@ -24,19 +24,8 @@ class FlightServiceTest {
     private AirportService airportService = new AirportService();
     private CityService cityService = new CityService();
 
-    @BeforeEach
-    void setUp() {
-        HibernateUtil.getCurrentSession().beginTransaction();
-    }
-
-    @AfterEach
-    void tearDown() {
-        HibernateUtil.getCurrentSession().getTransaction().commit();
-    }
-
     @Test
     void getFromDate() {
-        try {
             FlightEntity flight = new FlightEntity(airportService.getAirportByName("Домодедово"),
                     airportService.getAirportByName("Витязево"),
                     Timestamp.valueOf("3018-10-10 00:13:13"),
@@ -50,16 +39,10 @@ class FlightServiceTest {
             for (FlightEntity fl : list) {
                 flightService.remove(fl);
             }
-        }
-        catch (Exception exc) {
-            HibernateUtil.getCurrentSession().getTransaction().rollback();
-            throw exc;
-        }
     }
 
     @Test
     void removeFromDate() {
-        try {
             FlightEntity flight = new FlightEntity(airportService.getAirportByName("Домодедово"),
                     airportService.getAirportByName("Витязево"),
                     Timestamp.valueOf("3018-10-10 00:13:13"),
@@ -70,24 +53,15 @@ class FlightServiceTest {
             Timestamp date = Timestamp.valueOf("3018-10-10 00:00:00");
 
             flightService.removeFromDate(date);
-            HibernateUtil.getCurrentSession().flush();
             List<FlightEntity> list = flightService.getFromDate(date);
             assertEquals(list.size(), 0);
-        }
-        catch (Exception exc) {
-            HibernateUtil.getCurrentSession().getTransaction().rollback();
-            throw exc;
-        }
-
     }
 
     @Test
     void getWithFilter() {
-        try {
             List<FlightEntity> flights = new ArrayList<>();
-            CityEntity moscow = cityService.getCityByName("Москва");
-            List<AirportEntity> mair = moscow.getAirports();
-            AirportEntity vityazevo = cityService.getCityByName("Анапа").getAirports().get(0);
+            List<AirportEntity> mair = airportService.getAirportsByCityName("Москва");
+            AirportEntity vityazevo = airportService.getAirportByName("Витязево");
             for (AirportEntity air : mair) {
 
                 Calendar calendar = Calendar.getInstance();
@@ -111,14 +85,12 @@ class FlightServiceTest {
                     vityazevo, Timestamp.valueOf("3018-10-10 00:13:13"),
                     Timestamp.valueOf("3018-10-10 13:13:13"),
                     new BigDecimal("1313.13")));
-
             for (FlightEntity fl : flights) {
                 flightService.add(fl);
             }
             for (FlightEntity fl : wrFl) {
                 flightService.add(fl);
             }
-            HibernateUtil.getCurrentSession().flush();
             try {
                 List<FlightEntity> filter = flightService.getWithFilter(
                         "Москва",
@@ -142,57 +114,22 @@ class FlightServiceTest {
                     flightService.remove(fl);
                 }
             }
-        }
-        catch (Exception exc) {
-            HibernateUtil.getCurrentSession().getTransaction().rollback();
-            throw exc;
-        }
     }
 
     @Test
     void add() {
-        try {
             FlightEntity flight = new FlightEntity(airportService.getAirportByName("Домодедово"),
                     airportService.getAirportByName("Витязево"),
                     Timestamp.valueOf("3018-10-10 00:13:13"),
                     Timestamp.valueOf("3018-10-10 13:13:13"),
                     new BigDecimal("1313.13"));
             Serializable id = flightService.add(flight);
-            assertTrue(HibernateUtil.getCurrentSession().contains(flight));
             assertEquals((int) id, flight.getId());
-            HibernateUtil.getCurrentSession().delete(HibernateUtil.getCurrentSession().load(FlightEntity.class, id));
-        }
-        catch (Exception exc) {
-            HibernateUtil.getCurrentSession().getTransaction().rollback();
-            throw exc;
-        }
-    }
-
-    @Test
-    void update() {
-        try {
-            FlightEntity flight = new FlightEntity(airportService.getAirportByName("Домодедово"),
-                    airportService.getAirportByName("Витязево"),
-                    Timestamp.valueOf("3018-10-10 00:13:13"),
-                    Timestamp.valueOf("3018-10-10 13:13:13"),
-                    new BigDecimal("1313.13"));
-            Serializable id = flightService.add(flight);
-            HibernateUtil.getCurrentSession().getTransaction().commit();
-            flight.setAirline("РосАвиаРос");
-            HibernateUtil.getCurrentSession().beginTransaction();
-            flightService.update(flight);
-            assertEquals(HibernateUtil.getCurrentSession().load(FlightEntity.class, id).getAirline(), "РосАвиаРос");
             flightService.remove(flight);
-        }
-        catch (Exception exc) {
-            HibernateUtil.getCurrentSession().getTransaction().rollback();
-            throw exc;
-        }
     }
 
     @Test
     void remove() {
-        try {
             FlightEntity flight = new FlightEntity(airportService.getAirportByName("Домодедово"),
                     airportService.getAirportByName("Витязево"),
                     Timestamp.valueOf("3018-10-10 00:13:13"),
@@ -201,13 +138,7 @@ class FlightServiceTest {
             flightService.add(flight);
             int prevSize = flightService.getAll().size();
             flightService.remove(flight);
-            assertFalse(HibernateUtil.getCurrentSession().contains(flight));
             assertEquals(prevSize - 1, flightService.getAll().size());
-        }
-        catch (Exception exc) {
-            HibernateUtil.getCurrentSession().getTransaction().rollback();
-            throw exc;
-        }
     }
 
 }
