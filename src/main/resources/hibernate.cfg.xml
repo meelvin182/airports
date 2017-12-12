@@ -13,11 +13,11 @@
         <property name="show_sql">true</property>
         <property name="dialect">org.hibernate.dialect.PostgreSQL9Dialect</property>
 
-        <mapping class="model.entities.AirportEntity"/>
-        <mapping class="model.entities.CityEntity"/>
-        <mapping class="model.entities.FlightEntity"/>
-        <mapping class="model.entities.TransferEntity"/>
-        <mapping class="model.entities.UserEntity"/>
+        <mapping class="com.airport.model.entities.AirportEntity"/>
+        <mapping class="com.airport.model.entities.CityEntity"/>
+        <mapping class="com.airport.model.entities.FlightEntity"/>
+        <mapping class="com.airport.model.entities.TransferEntity"/>
+        <mapping class="com.airport.model.entities.UserEntity"/>
 
 
         <!-- DB schema will be updated if needed -->
