@@ -1,21 +1,21 @@
 CREATE TABLE IF NOT EXISTS cities (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(46),
+  name VARCHAR(46)
 );
 
 CREATE TABLE IF NOT EXISTS airports (
   id SERIAL PRIMARY KEY,
   name VARCHAR(46),
   city_id INTEGER REFERENCES cities,
-  parallel NUMERIC,
-  meridian NUMERIC
+  latitude NUMERIC,
+  longtitude NUMERIC
 );
 
 CREATE TABLE IF NOT EXISTS flights (
   id SERIAL PRIMARY KEY,
   airport_from_id INTEGER REFERENCES airports,
   airport_to_id INTEGER REFERENCES airports,
-  depature_time TIMESTAMP,
+  departure_time TIMESTAMP,
   arrival_time TIMESTAMP,
   cost NUMERIC CHECK (cost > 0),
   airline VARCHAR(46),

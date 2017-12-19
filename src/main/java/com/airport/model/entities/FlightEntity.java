@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @JsonIgnoreProperties(value = {"transfers", "id", "airportFromId"})
-
 @Entity
 @Table(name = "flights", schema = "public", catalog = "airports")
 public class FlightEntity {
@@ -74,7 +73,7 @@ public class FlightEntity {
     }
 
     @Basic
-    @Column(name = "depature_time", nullable = true)
+    @Column(name = "departure_time", nullable = true)
     public Timestamp getDepatureTime() {
         return depatureTime;
     }

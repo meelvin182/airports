@@ -1,13 +1,16 @@
 package com.airport.model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
+@JsonIgnoreProperties(value = {"id"})
 @Entity
 @Table(name = "users", schema = "public", catalog = "airports")
 public class UserEntity {
     private int id;
     private String login;
-    private String userRole = "USER";
+    private String userRole;
     private String password;
 
     public UserEntity() {}
@@ -71,7 +74,8 @@ public class UserEntity {
         UserEntity that = (UserEntity) o;
 
         return (login != null ? login.equals(that.login) : that.login == null) &&
-                (userRole != null ? userRole.equals(that.userRole) : that.userRole == null);
+                (userRole != null ? userRole.equals(that.userRole) : that.userRole == null) &&
+                (password != null ? password.equals(that.password) : that.password == null);
     }
 
     @Override
@@ -79,6 +83,7 @@ public class UserEntity {
         int result = 0;
         result = 31 * result + (login != null ? login.hashCode() : 0);
         result = 31 * result + (userRole != null ? userRole.hashCode() : 0);
+        result = 31 * result + (password != null ? password.hashCode() : 0);
         return result;
     }
 }

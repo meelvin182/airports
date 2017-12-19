@@ -2,9 +2,11 @@ package com.airport.service;
 
 import com.airport.model.entities.AirportEntity;
 import com.airport.util.HibernateUtil;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class AirportService extends AbstractService<AirportEntity> {
     public AirportService() {
         super(AirportEntity.class);

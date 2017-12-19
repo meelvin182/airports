@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.util.List;
 
-@JsonIgnoreProperties(value = "airports")
+@JsonIgnoreProperties(value = {"airports", "id"})
 @Entity
 @Table(name = "cities", schema = "public", catalog = "airports")
 public class CityEntity {
