@@ -27,9 +27,9 @@ public class AirportController {
     }
 
     @CrossOrigin
-    @PostMapping("/airport/new")
+    @PostMapping("/airport")
     @ResponseBody
-    public void addCity(@RequestParam String name,
+    public void addAirport(@RequestParam String name,
                         @RequestParam String cityName,
                         @RequestParam String parallel,
                         @RequestParam String meridian) {
@@ -41,7 +41,7 @@ public class AirportController {
     }
 
     @CrossOrigin
-    @PostMapping("/airport/delete")
+    @DeleteMapping("/airport")
     @ResponseBody
     public void deleteCity(@RequestBody String name) {
         AirportEntity entity = airportService.getAirportByName(name);

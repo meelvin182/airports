@@ -12,7 +12,7 @@ public class FlightResponse implements java.io.Serializable{
     private String airportTo;
     private String cityFrom;
     private String cityTo;
-    private Timestamp depatureTime;
+    private Timestamp departureTime;
     private Timestamp arrivalTime;
     private BigDecimal cost;
     private String airline;
@@ -24,7 +24,7 @@ public class FlightResponse implements java.io.Serializable{
         this.airportTo = flightEntity.getAirportToObject().getName();
         this.cityFrom = flightEntity.getAirportFromObject().getCity().getName();
         this.cityTo = flightEntity.getAirportToObject().getCity().getName();
-        this.depatureTime = flightEntity.getDepatureTime();
+        this.departureTime = flightEntity.getDepartureTime();
         this.arrivalTime = flightEntity.getArrivalTime();
         this.cost = flightEntity.getCost();
         this.airline = flightEntity.getAirline();

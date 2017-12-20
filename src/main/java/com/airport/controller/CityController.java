@@ -24,7 +24,7 @@ public class CityController {
     }
 
     @CrossOrigin
-    @PostMapping("/city/new")
+    @PostMapping("/api/city")
     @ResponseBody
     public void addCity(@RequestBody String cityName) {
         CityEntity cityEntity = new CityEntity(cityName);
@@ -32,7 +32,7 @@ public class CityController {
     }
 
     @CrossOrigin
-    @PostMapping("/city/delete")
+    @DeleteMapping ("/api/city")
     @ResponseBody
     public void deleteCity(@RequestBody String cityName) {
         CityEntity city = cityService.getCityByName(cityName);

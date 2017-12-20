@@ -14,7 +14,7 @@ public class FlightEntity {
     private int id;
     private Integer airportFromId;
     private Integer airportToId;
-    private Timestamp depatureTime;
+    private Timestamp departureTime;
     private Timestamp arrivalTime;
     private BigDecimal cost;
     private String airline;
@@ -25,12 +25,12 @@ public class FlightEntity {
     private List<TransferEntity> transfers;
 
     public FlightEntity() {}
-    public FlightEntity(AirportEntity airportFromObject, AirportEntity airportToObject, Timestamp depatureTime, Timestamp arrivalTime, BigDecimal cost) {
+    public FlightEntity(AirportEntity airportFromObject, AirportEntity airportToObject, Timestamp departureTime, Timestamp arrivalTime, BigDecimal cost) {
         this.airportFromObject = airportFromObject;
         this.airportFromId = airportFromObject.getId();
         this.airportToObject = airportToObject;
         this.airportToId = airportToObject.getId();
-        this.depatureTime = depatureTime;
+        this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.cost = cost;
     }
@@ -74,12 +74,12 @@ public class FlightEntity {
 
     @Basic
     @Column(name = "departure_time", nullable = true)
-    public Timestamp getDepatureTime() {
-        return depatureTime;
+    public Timestamp getDepartureTime() {
+        return departureTime;
     }
 
-    public void setDepatureTime(Timestamp depatureTime) {
-        this.depatureTime = depatureTime;
+    public void setDepartureTime(Timestamp depatureTime) {
+        this.departureTime = depatureTime;
     }
 
     @Basic
@@ -141,7 +141,7 @@ public class FlightEntity {
 
         return (airportFromId != null ? airportFromId.equals(that.airportFromId) : that.airportFromId == null) &&
                 (airportToId != null ? airportToId.equals(that.airportToId) : that.airportToId == null) &&
-                (depatureTime != null ? depatureTime.equals(that.depatureTime) : that.depatureTime == null) &&
+                (departureTime != null ? departureTime.equals(that.departureTime) : that.departureTime == null) &&
                 (arrivalTime != null ? arrivalTime.equals(that.arrivalTime) : that.arrivalTime == null) &&
                 (cost != null ? cost.equals(that.cost) : that.cost == null) &&
                 (airline != null ? airline.equals(that.airline) : that.airline == null) &&
@@ -154,7 +154,7 @@ public class FlightEntity {
         int result = 0;
         result = 31 * result + (airportFromId != null ? airportFromId.hashCode() : 0);
         result = 31 * result + (airportToId != null ? airportToId.hashCode() : 0);
-        result = 31 * result + (depatureTime != null ? depatureTime.hashCode() : 0);
+        result = 31 * result + (departureTime != null ? departureTime.hashCode() : 0);
         result = 31 * result + (arrivalTime != null ? arrivalTime.hashCode() : 0);
         result = 31 * result + (cost != null ? cost.hashCode() : 0);
         result = 31 * result + (airline != null ? airline.hashCode() : 0);

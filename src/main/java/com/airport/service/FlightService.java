@@ -25,8 +25,8 @@ public class FlightService extends AbstractService<FlightEntity>{
 
             Query query = HibernateUtil.getCurrentSession()
                     .createQuery("select flight from FlightEntity flight " +
-                            "where flight.depatureTime >= :date and " +
-                            "flight.depatureTime <= :dateFor");
+                            "where flight.departureTime >= :date and " +
+                            "flight.departureTime <= :dateFor");
             query.setParameter("date", dateFrom);
             query.setParameter("dateFor", dateFor);
             List<FlightEntity> list = (List<FlightEntity>) query.list();
@@ -47,8 +47,8 @@ public class FlightService extends AbstractService<FlightEntity>{
 
             Query query = HibernateUtil.getCurrentSession()
                     .createQuery("delete from FlightEntity flight " +
-                            "where flight.depatureTime >= :date and " +
-                            "flight.depatureTime <= :dateFor");
+                            "where flight.departureTime >= :date and " +
+                            "flight.departureTime <= :dateFor");
             query.setParameter("date", dateFrom);
             query.setParameter("dateFor", dateFor);
             query.executeUpdate();
@@ -78,8 +78,8 @@ public class FlightService extends AbstractService<FlightEntity>{
                             "where airport.cityId = " +
                             "(select city.id from CityEntity city " +
                             "where city.name = :cityTo)) " +
-                            "and flight.depatureTime >= :date " +
-                            "and flight.depatureTime <= :dateFor " +
+                            "and flight.departureTime >= :date " +
+                            "and flight.departureTime <= :dateFor " +
                             "and flight.cost <= :hCost");
             query.setString("cityFrom", cityFrom);
             query.setString("cityTo", cityTo);

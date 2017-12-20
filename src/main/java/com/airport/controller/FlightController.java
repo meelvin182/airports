@@ -63,7 +63,7 @@ public class FlightController {
     }
 
     @CrossOrigin
-    @PostMapping("/flight/new")
+    @PostMapping("/api/flight")
     @ResponseBody
     public void addFlight(@RequestBody FlightResponse flight) {
         FlightEntity flightEntity = new FlightEntity(airportService.getAirportByName(flight.getAirportFrom()),
@@ -79,7 +79,7 @@ public class FlightController {
     }
 
     @CrossOrigin
-    @PostMapping("/flight/remove")
+    @DeleteMapping("/api/flight")
     @ResponseBody
     public void deleteFlight(@RequestBody FlightResponse flight) {
         FlightEntity flightEntity = new FlightEntity(airportService.getAirportByName(flight.getAirportFrom()),
