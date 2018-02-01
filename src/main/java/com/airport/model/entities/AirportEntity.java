@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@JsonIgnoreProperties(value = {"id", "cityId", "city", "flightsFrom", "flightsTo", "transfersIn"})
+@JsonIgnoreProperties(value = {"cityId", "city", "flightsFrom", "flightsTo", "transfersIn"})
 @Entity
 @Table(name = "airports", schema = "public", catalog = "airports")
 public class AirportEntity {

@@ -1,7 +1,7 @@
 package com.airport.controller;
 
 import com.airport.model.entities.FlightEntity;
-import com.airport.model.view.FlightResponse;
+import com.airport.model.client.FlightResponse;
 import com.airport.service.AirportService;
 import com.airport.util.FlightForDateLoader;
 import org.springframework.beans.factory.annotation.Autowired;

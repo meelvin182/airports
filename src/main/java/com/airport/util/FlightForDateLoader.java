@@ -2,7 +2,7 @@ package com.airport.util;
 
 import com.airport.model.entities.AirportEntity;
 import com.airport.model.entities.FlightEntity;
-import com.airport.model.view.Airline;
+import com.airport.model.client.Airline;
 import com.airport.service.AirportService;
 import com.airport.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
