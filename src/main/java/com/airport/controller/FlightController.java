@@ -69,7 +69,7 @@ public class FlightController {
         FlightEntity flightEntity = new FlightEntity(airportService.getAirportByName(flight.getAirportFrom()),
                 airportService.getAirportByName(flight.getAirportTo()),
                 flight.getArrivalTime(),
-                flight.getDepatureTime(),
+                flight.getDepartureTime(),
                 flight.getCost()
                 );
         flightEntity.setAirline(flight.getAirline());
@@ -85,7 +85,7 @@ public class FlightController {
         FlightEntity flightEntity = new FlightEntity(airportService.getAirportByName(flight.getAirportFrom()),
                 airportService.getAirportByName(flight.getAirportTo()),
                 flight.getArrivalTime(),
-                flight.getDepatureTime(),
+                flight.getDepartureTime(),
                 flight.getCost()
         );
         flightEntity.setAirline(flight.getAirline());

@@ -9,7 +9,7 @@ import java.io.Serializable;
 import static com.airport.util.HibernateUtil.getCurrentSession;
 
 @Service
-public class UserService extends AbstractService<UserEntity>{
+public class UserService extends AbstractService<UserEntity> {
     public UserService() {
         super(UserEntity.class);
     }
@@ -44,4 +44,6 @@ public class UserService extends AbstractService<UserEntity>{
             throw exc;
         }
     }
+
+
 }
