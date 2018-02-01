@@ -4,12 +4,18 @@ import com.airport.model.entities.AirportEntity;
 import com.airport.service.AirportService;
 import com.airport.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+
 @RestController
+@RequestMapping(ApiPath.API_PATH)
+@CrossOrigin
 public class AirportController {
     private AirportService airportService;
     private CityService cityService;
@@ -20,19 +26,24 @@ public class AirportController {
         this.cityService = cityService;
     }
 
-    @CrossOrigin
-    @RequestMapping("/getAirports")
-    public List<AirportEntity> getAirports() {
-        return airportService.getAll();
+    @RequestMapping(value = "/airport/", method = GET)
+    public ResponseEntity<List<AirportEntity>> getAllAirports() {
+        return new ResponseEntity<>(airportService.getAll(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/airport/{id}", method = GET)
+    public ResponseEntity<AirportEntity> getAirport(@PathVariable("id") long id) {
+        // example
+        return new ResponseEntity<>(airportService.getAll().get(0), HttpStatus.OK);
     }
 
     @CrossOrigin
     @PostMapping("/airport")
     @ResponseBody
     public void addAirport(@RequestParam String name,
-                        @RequestParam String cityName,
-                        @RequestParam String parallel,
-                        @RequestParam String meridian) {
+                           @RequestParam String cityName,
+                           @RequestParam String parallel,
+                           @RequestParam String meridian) {
         AirportEntity entity = new AirportEntity(name,
                 cityService.getCityByName(cityName),
                 new BigDecimal(parallel),
@@ -40,7 +51,6 @@ public class AirportController {
         airportService.add(entity);
     }
 
-    @CrossOrigin
     @DeleteMapping("/airport")
     @ResponseBody
     public void deleteCity(@RequestBody String name) {

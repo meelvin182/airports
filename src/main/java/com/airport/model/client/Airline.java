@@ -1,4 +1,4 @@
-package com.airport.model.view;
+package com.airport.model.client;
 
 public enum Airline {
     Aeroflot("Аэрофлот"),

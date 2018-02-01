@@ -1,4 +1,4 @@
-package com.airport.model.view;
+package com.airport.model.client;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

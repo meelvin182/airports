@@ -1,10 +1,9 @@
 package com.airport.controller;
 
 import com.airport.model.entities.CityEntity;
+import com.airport.service.CityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.airport.service.CityService;
-import com.airport.util.HibernateUtil;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class CityController {
     }
 
     @CrossOrigin
-    @DeleteMapping ("/api/city")
+    @DeleteMapping("/api/city")
     @ResponseBody
     public void deleteCity(@RequestBody String cityName) {
         CityEntity city = cityService.getCityByName(cityName);
