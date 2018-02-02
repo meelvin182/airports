@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class FlightController {
@@ -108,4 +109,23 @@ public class FlightController {
         flightService.removeFromDate(Timestamp.valueOf(date));
     }
 
+    @CrossOrigin
+    @RequestMapping("/api/search/complex")
+    public ResponseEntity<List<List<FlightResponse>>> getComplexFlights(@RequestParam("cityFrom")String cityFrom,
+                                                                  @RequestParam("cityTo")String cityTo,
+                                                                  @RequestParam("date")String date,
+                                                                  @RequestParam("cost")String cost) {
+        List<List<FlightEntity>> flightList =  flightService.getWithComplexFilter(
+                cityFrom,
+                cityTo,
+                Timestamp.valueOf(date),
+                new BigDecimal(cost)
+        );
+        List<List<FlightResponse>> responses = new ArrayList<>();
+        for (List<FlightEntity> item : flightList) {
+            responses.add(item.stream().map(FlightResponse::new).collect(Collectors.toList()));
+        }
+
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
 }

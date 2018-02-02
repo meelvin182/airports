@@ -19,6 +19,13 @@ public class TimestampWorker {
         calendar.add(Calendar.MINUTE, mins);
         return new Timestamp(calendar.getTimeInMillis());
     }
+
+    public static Timestamp addHours(Timestamp dateTime, int hours) {
+        calendar.setTime(dateTime);
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        return new Timestamp(calendar.getTimeInMillis());
+    }
+
     public static Timestamp addDays(Timestamp dateTime, int days) {
         calendar.setTime(dateTime);
         calendar.add(Calendar.DATE, days);
