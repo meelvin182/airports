@@ -121,10 +121,12 @@ public class FlightController {
                 Timestamp.valueOf(date),
                 new BigDecimal(cost)
         );
+        System.out.println(flightList);
         List<List<FlightResponse>> responses = new ArrayList<>();
         for (List<FlightEntity> item : flightList) {
             responses.add(item.stream().map(FlightResponse::new).collect(Collectors.toList()));
         }
+        System.out.println(responses);
 
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.System.in;
+import static java.lang.System.setOut;
 
 @Service
 public class FlightService extends AbstractService<FlightEntity>{
@@ -127,7 +128,9 @@ public class FlightService extends AbstractService<FlightEntity>{
             query.setString("cityFrom", cityFrom);
             query.setParameter("date", date);
             query.setParameter("dateFor", dateFor);
+            query.setParameter("hCost", cost);
             List<FlightEntity> list = (List<FlightEntity>) query.list();
+
             List<FlightEntity> firstTransfer = new ArrayList<>();
             List<FlightEntity> secondTransfer = new ArrayList<>();
 
@@ -155,7 +158,8 @@ public class FlightService extends AbstractService<FlightEntity>{
                         .collect(Collectors.toList()));
                 firstTransferQuery.setParameter("date", TimestampWorker.addHours(minDate, minTimeTransfer));
                 firstTransferQuery.setParameter("dateFor", TimestampWorker.addHours(maxDate, maxTimeTransfer));
-                firstTransfer = (List<FlightEntity>) query.list();
+                firstTransferQuery.setParameter("hCost", cost);
+                firstTransfer = (List<FlightEntity>) firstTransferQuery.list();
 
                 if (!firstTransfer.isEmpty()) {
                     minDate = firstTransfer.get(0).getArrivalTime();
@@ -181,27 +185,29 @@ public class FlightService extends AbstractService<FlightEntity>{
                             .collect(Collectors.toList()));
                     secondTransferQuery.setParameter("date", TimestampWorker.addHours(minDate, minTimeTransfer));
                     secondTransferQuery.setParameter("dateFor", TimestampWorker.addHours(maxDate, maxTimeTransfer));
-                    secondTransfer = (List<FlightEntity>) query.list();
+                    secondTransferQuery.setParameter("hCost", cost);
+                    secondTransfer = (List<FlightEntity>) secondTransferQuery.list();
                 }
             }
+
             Query destAirportsQuery = HibernateUtil.getCurrentSession()
-                    .createQuery("select air.id from AirportEntity air " +
-                            "where air.city = :cityTo");
+                    .createQuery("select air from AirportEntity air " +
+                            "where air.city.name = :cityTo");
             destAirportsQuery.setString("cityTo", cityTo);
-            List<Integer> destAirportsId = (List<Integer>) query.list();
+            List<AirportEntity> destAirportsId = (List<AirportEntity>) destAirportsQuery.list();
 
             HibernateUtil.getCurrentSession().getTransaction().commit();
 
             List<List<FlightEntity>> result = new ArrayList<>();
             for (FlightEntity flight : list) {
-                if (destAirportsId.contains(flight.getAirportToId())) {
+                if (destAirportsId.contains(flight.getAirportToObject())) {
                     List<FlightEntity> combineFlight = new ArrayList<>();
                     combineFlight.add(flight);
                     result.add(combineFlight);
                 }
                 else {
                     for (FlightEntity transfer1 : firstTransfer) {
-                        if (destAirportsId.contains(transfer1.getAirportToId()) &&
+                        if (destAirportsId.contains(transfer1.getAirportToObject()) &&
                                 (flight.getCost()
                                         .add(transfer1.getCost())
                                         .compareTo(cost) < 0)) {
@@ -212,7 +218,7 @@ public class FlightService extends AbstractService<FlightEntity>{
                         }
                         else  {
                             for (FlightEntity transfer2 : secondTransfer) {
-                                if (destAirportsId.contains(transfer2.getAirportToId()) &&
+                                if (destAirportsId.contains(transfer2.getAirportToObject()) &&
                                         (flight.getCost()
                                                 .add(transfer1.getCost())
                                                 .add(transfer2.getCost())

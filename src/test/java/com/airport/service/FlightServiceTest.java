@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @Service
 class FlightServiceTest {
+
     private FlightService flightService = new FlightService();
     private AirportService airportService = new AirportService();
     private CityService cityService = new CityService();
@@ -110,6 +111,35 @@ class FlightServiceTest {
                     flightService.remove(fl);
                 }
             }
+    }
+
+    @Test
+    void getWithComplexFilter() {
+        List<AirportEntity> mair = airportService.getAirportsByCityName("Москва");
+        AirportEntity vityazevo = airportService.getAirportByName("Витязево");
+        List<FlightEntity> flights = new ArrayList<>();
+        for (AirportEntity air : mair) {
+            flights.add(new FlightEntity(air, vityazevo,
+                    Timestamp.valueOf("3018-10-11 00:13:13"),
+                    Timestamp.valueOf("3018-10-11 13:13:13"),
+                    new BigDecimal("1313.13")));
+        }
+        for (FlightEntity fl : flights) {
+            flightService.add(fl);
+        }
+        try {
+            List<List<FlightEntity>> flList = flightService.getWithComplexFilter("Москва",
+                    "Анапа",
+                    Timestamp.valueOf("3018-10-11 00:00:00"),
+                    new BigDecimal("50000.0"));
+            assertEquals(flList.size(), mair.size());
+            System.out.println(flList);
+        }
+        finally {
+            for (FlightEntity fl : flights) {
+                flightService.remove(fl);
+            }
+        }
     }
 
     @Test
