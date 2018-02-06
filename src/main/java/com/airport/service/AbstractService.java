@@ -7,7 +7,7 @@ import java.util.List;
 
 import static com.airport.util.HibernateUtil.getCurrentSession;
 
-abstract public class AbstractService<T> {
+public abstract class AbstractService<T> {
     private Class<T> typeParameterClass;
 
     public AbstractService(Class<T> typeParameterClass) {
@@ -20,8 +20,7 @@ abstract public class AbstractService<T> {
             Serializable serializable = getCurrentSession().save(entity);
             HibernateUtil.getCurrentSession().getTransaction().commit();
             return serializable;
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             HibernateUtil.getCurrentSession().getTransaction().rollback();
             throw exc;
         }
@@ -33,8 +32,7 @@ abstract public class AbstractService<T> {
             List<T> list = (List<T>) getCurrentSession().createCriteria(typeParameterClass).list();
             HibernateUtil.getCurrentSession().getTransaction().commit();
             return list;
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             HibernateUtil.getCurrentSession().getTransaction().rollback();
             throw exc;
         }
@@ -45,8 +43,7 @@ abstract public class AbstractService<T> {
             HibernateUtil.getCurrentSession().beginTransaction();
             getCurrentSession().delete(entity);
             HibernateUtil.getCurrentSession().getTransaction().commit();
-        }
-        catch (Exception exc) {
+        } catch (Exception exc) {
             HibernateUtil.getCurrentSession().getTransaction().rollback();
             throw exc;
         }
