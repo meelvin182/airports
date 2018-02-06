@@ -111,7 +111,7 @@ public class FlightService extends AbstractService<FlightEntity>{
             HibernateUtil.getCurrentSession().beginTransaction();
             Timestamp dateFrom = TimestampWorker.resetTime(date);
             Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
-            Integer minTimeTransfer = 1;
+            Integer minTimeTransfer = 0;
             Integer maxTimeTransfer = 8;
 
             Query query = HibernateUtil.getCurrentSession()
@@ -180,7 +180,7 @@ public class FlightService extends AbstractService<FlightEntity>{
                                     "and flight.departureTime <= :dateFor " +
                                     "and flight.cost <= :hCost"
                             );
-                    firstTransferQuery.setParameterList("ids", firstTransfer.stream()
+                    secondTransferQuery.setParameterList("ids", firstTransfer.stream()
                             .map(FlightEntity::getAirportToId)
                             .collect(Collectors.toList()));
                     secondTransferQuery.setParameter("date", TimestampWorker.addHours(minDate, minTimeTransfer));

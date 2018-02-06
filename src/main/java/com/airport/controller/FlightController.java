@@ -33,7 +33,7 @@ public class FlightController {
 
     @CrossOrigin
     @RequestMapping("/api/search")
-    public ResponseEntity<List<FlightResponse>> getFlights(@RequestParam("cityFrom")String cityFrom,
+    public ResponseEntity<List<FlightEntity>> getFlights(@RequestParam("cityFrom")String cityFrom,
                                                            @RequestParam("cityTo")String cityTo,
                                                            @RequestParam("date")String date,
                                                            @RequestParam("cost")String cost) {
@@ -43,13 +43,8 @@ public class FlightController {
                 Timestamp.valueOf(date),
                 new BigDecimal(cost)
         );
-        List<FlightResponse> responses = new ArrayList<>();
-        for (FlightEntity flightEntity : flights) {
-            responses.add(new FlightResponse(flightEntity));
-        }
-        System.out.println(flights.size());
-        System.out.println(responses.size());
-        return new ResponseEntity<>(responses, HttpStatus.OK);
+
+        return new ResponseEntity<>(flights, HttpStatus.OK);
     }
 
     @CrossOrigin
@@ -111,7 +106,7 @@ public class FlightController {
 
     @CrossOrigin
     @RequestMapping("/api/search/complex")
-    public ResponseEntity<List<List<FlightResponse>>> getComplexFlights(@RequestParam("cityFrom")String cityFrom,
+    public ResponseEntity<List<List<FlightEntity>>> getComplexFlights(@RequestParam("cityFrom")String cityFrom,
                                                                   @RequestParam("cityTo")String cityTo,
                                                                   @RequestParam("date")String date,
                                                                   @RequestParam("cost")String cost) {
@@ -121,13 +116,7 @@ public class FlightController {
                 Timestamp.valueOf(date),
                 new BigDecimal(cost)
         );
-        System.out.println(flightList);
-        List<List<FlightResponse>> responses = new ArrayList<>();
-        for (List<FlightEntity> item : flightList) {
-            responses.add(item.stream().map(FlightResponse::new).collect(Collectors.toList()));
-        }
-        System.out.println(responses);
 
-        return new ResponseEntity<>(responses, HttpStatus.OK);
+        return new ResponseEntity<>(flightList, HttpStatus.OK);
     }
 }

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 
-@JsonIgnoreProperties(value = {"transfers", "id", "airportFromId"})
+@JsonIgnoreProperties(value = {"transfers", "id", "airportFromId", "airportToId"})
 @Entity
 @Table(name = "flights", schema = "public", catalog = "airports")
 public class FlightEntity {
@@ -25,6 +25,7 @@ public class FlightEntity {
     private List<TransferEntity> transfers;
 
     public FlightEntity() {}
+
     public FlightEntity(AirportEntity airportFromObject, AirportEntity airportToObject, Timestamp departureTime, Timestamp arrivalTime, BigDecimal cost) {
         this.airportFromObject = airportFromObject;
         this.airportFromId = airportFromObject.getId();

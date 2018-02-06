@@ -124,6 +124,21 @@ class FlightServiceTest {
                     Timestamp.valueOf("3018-10-11 13:13:13"),
                     new BigDecimal("1313.13")));
         }
+        flights.add(new FlightEntity(mair.get(0),
+                airportService.getAirportByName("Абакан"),
+                Timestamp.valueOf("3018-10-11 00:13:13"),
+                Timestamp.valueOf("3018-10-11 12:00:00"),
+                new BigDecimal("1313.13")));
+        flights.add(new FlightEntity(airportService.getAirportByName("Абакан"),
+                airportService.getAirportByName("Алдан"),
+                Timestamp.valueOf("3018-10-11 13:13:13"),
+                Timestamp.valueOf("3018-10-12 00:00:00"),
+                new BigDecimal("1313.13")));
+        flights.add(new FlightEntity(airportService.getAirportByName("Алдан"),
+                vityazevo,
+                Timestamp.valueOf("3018-10-12 02:00:00"),
+                Timestamp.valueOf("3018-10-12 05:00:00"),
+                new BigDecimal("1313.13")));
         for (FlightEntity fl : flights) {
             flightService.add(fl);
         }
@@ -132,7 +147,7 @@ class FlightServiceTest {
                     "Анапа",
                     Timestamp.valueOf("3018-10-11 00:00:00"),
                     new BigDecimal("50000.0"));
-            assertEquals(flList.size(), mair.size());
+            assertEquals(flList.size(), mair.size() + 1);
             System.out.println(flList);
         }
         finally {

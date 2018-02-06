@@ -32,9 +32,9 @@ public class AirportController {
     }
 
     @RequestMapping(value = "/airport/{id}", method = GET)
-    public ResponseEntity<AirportEntity> getAirport(@PathVariable("id") long id) {
+    public ResponseEntity<AirportEntity> getAirport(@PathVariable("id") int id) {
         // example
-        return new ResponseEntity<>(airportService.getAll().get(0), HttpStatus.OK);
+        return new ResponseEntity<>(airportService.getAll().get(id), HttpStatus.OK);
     }
 
     @CrossOrigin

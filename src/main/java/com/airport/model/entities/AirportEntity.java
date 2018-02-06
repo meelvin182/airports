@@ -20,16 +20,17 @@ public class AirportEntity {
     private List<FlightEntity> flightsTo;
     private List<TransferEntity> transfersIn;
 
-    private String cityName;
+    //private String cityName;
 
     public AirportEntity() {}
+
     public AirportEntity(String name, CityEntity city, BigDecimal parallel, BigDecimal meridian) {
         this.name = name;
         this.city = city;
         this.cityId = city.getId();
         this.parallel = parallel;
         this.meridian = meridian;
-        this.cityName = city.getName();
+        //this.cityName = city.getName();
     }
 
     @Id
@@ -121,7 +122,7 @@ public class AirportEntity {
     public void setCity(CityEntity citiesByCityId) {
         this.city = citiesByCityId;
         this.cityId = citiesByCityId.getId();
-        this.cityName = citiesByCityId.getName();
+        //this.cityName = citiesByCityId.getName();
     }
 
     @OneToMany(mappedBy = "airportFromObject")
@@ -153,10 +154,6 @@ public class AirportEntity {
 
     @Transient
     public String getCityName() {
-        return cityName;
-    }
-
-    public void setCityName(String cityName) {
-        this.cityName = cityName;
+        return this.getCity().getName();
     }
 }
