@@ -2,6 +2,7 @@ package com.airport.service;
 
 import com.airport.model.entities.AirportEntity;
 import com.airport.util.HibernateUtil;
+import com.airport.util.QueryHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class AirportService extends AbstractService<AirportEntity> {
         try {
             HibernateUtil.getCurrentSession().beginTransaction();
             AirportEntity airportEntity = (AirportEntity) HibernateUtil.getCurrentSession()
-                    .createQuery("SELECT airport FROM AirportEntity airport WHERE airport.name = :name")
+                    .createQuery(QueryHolder.GET_AIRPORTS_BY_NAME)
                     .setString("name", name)
                     .uniqueResult();
             HibernateUtil.getCurrentSession().getTransaction().commit();
@@ -33,7 +34,7 @@ public class AirportService extends AbstractService<AirportEntity> {
         try {
             HibernateUtil.getCurrentSession().beginTransaction();
             List<AirportEntity> airports = (List<AirportEntity>) HibernateUtil.getCurrentSession()
-                    .createQuery("SELECT airport FROM AirportEntity airport WHERE airport.city.name = :name")
+                    .createQuery(QueryHolder.GET_AIRPORTS_BY_CITY_NAME)
                     .setString("name", cityName)
                     .list();
             HibernateUtil.getCurrentSession().getTransaction().commit();

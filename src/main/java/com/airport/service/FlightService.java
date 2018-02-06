@@ -3,6 +3,7 @@ package com.airport.service;
 import com.airport.model.entities.AirportEntity;
 import com.airport.model.entities.FlightEntity;
 import com.airport.model.entities.TransferEntity;
+import com.airport.util.QueryHolder;
 import org.hibernate.Query;
 import org.springframework.stereotype.Service;
 import com.airport.util.HibernateUtil;
@@ -11,13 +12,10 @@ import com.airport.util.TimestampWorker;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.System.in;
-import static java.lang.System.setOut;
-
+@SuppressWarnings("unchecked")
 @Service
 public class FlightService extends AbstractService<FlightEntity>{
     public FlightService() {
@@ -31,9 +29,7 @@ public class FlightService extends AbstractService<FlightEntity>{
             Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
 
             Query query = HibernateUtil.getCurrentSession()
-                    .createQuery("select flight from FlightEntity flight " +
-                            "where flight.departureTime >= :date and " +
-                            "flight.departureTime <= :dateFor");
+                    .createQuery(QueryHolder.GET_FLIGHT_ENTITY_FROM_DATE);
             query.setParameter("date", dateFrom);
             query.setParameter("dateFor", dateFor);
             List<FlightEntity> list = (List<FlightEntity>) query.list();
@@ -53,9 +49,7 @@ public class FlightService extends AbstractService<FlightEntity>{
             Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
 
             Query query = HibernateUtil.getCurrentSession()
-                    .createQuery("delete from FlightEntity flight " +
-                            "where flight.departureTime >= :date and " +
-                            "flight.departureTime <= :dateFor");
+                    .createQuery(QueryHolder.REMOVE_FLIGHT_ENTITY_FROM_DATE);
             query.setParameter("date", dateFrom);
             query.setParameter("dateFor", dateFor);
             query.executeUpdate();
@@ -74,20 +68,7 @@ public class FlightService extends AbstractService<FlightEntity>{
             Timestamp dateFor = TimestampWorker.addDays(dateFrom, 1);
 
             Query query = HibernateUtil.getCurrentSession()
-                    .createQuery("select flight from FlightEntity flight " +
-                            "where flight.airportFromId in " +
-                            "(select airport.id from AirportEntity airport " +
-                            "where airport.cityId = " +
-                            "(select city.id from CityEntity city " +
-                            "where city.name = :cityFrom)) " +
-                            "and flight.airportToId in " +
-                            "(select airport.id from AirportEntity airport " +
-                            "where airport.cityId = " +
-                            "(select city.id from CityEntity city " +
-                            "where city.name = :cityTo)) " +
-                            "and flight.departureTime >= :date " +
-                            "and flight.departureTime <= :dateFor " +
-                            "and flight.cost <= :hCost");
+                    .createQuery(QueryHolder.GET_FLIGHT_ENTITY_WITH_FILTER);
             query.setString("cityFrom", cityFrom);
             query.setString("cityTo", cityTo);
             query.setParameter("date", date);
@@ -115,16 +96,7 @@ public class FlightService extends AbstractService<FlightEntity>{
             Integer maxTimeTransfer = 8;
 
             Query query = HibernateUtil.getCurrentSession()
-                    .createQuery("select flight from FlightEntity flight " +
-                            "where flight.airportFromId in " +
-                            "(select airport.id from AirportEntity airport " +
-                            "where airport.cityId = " +
-                            "(select city.id from CityEntity city " +
-                            "where city.name = :cityFrom)) " +
-                            "and flight.departureTime >= :date " +
-                            "and flight.departureTime <= :dateFor " +
-                            "and flight.cost <= :hCost"
-                            );
+                    .createQuery(QueryHolder.GET_WITH_COMPLEX_FILTER);
             query.setString("cityFrom", cityFrom);
             query.setParameter("date", date);
             query.setParameter("dateFor", dateFor);
@@ -137,15 +109,10 @@ public class FlightService extends AbstractService<FlightEntity>{
             if (!list.isEmpty()) {
                 Timestamp minDate = list.get(0).getArrivalTime();
                 Timestamp maxDate = list.get(0).getArrivalTime();
-                for (FlightEntity flight : list) {
-                    if (minDate.before(flight.getArrivalTime())) {
-                        minDate = flight.getArrivalTime();
-                    }
-                    if (maxDate.after(flight.getArrivalTime())) {
-                        maxDate = flight.getArrivalTime();
-                    }
-                }
-
+                FlightForDates flightForDates = new FlightForDates(list, minDate, maxDate).invoke();
+                minDate = flightForDates.getMinDate();
+                maxDate = flightForDates.getMaxDate();
+                // TODO: 06.02.2018 i am too vpadlu to name it
                 Query firstTransferQuery = HibernateUtil.getCurrentSession()
                         .createQuery("select flight from FlightEntity flight " +
                                 "where flight.airportFromId in (:ids) " +
@@ -164,15 +131,11 @@ public class FlightService extends AbstractService<FlightEntity>{
                 if (!firstTransfer.isEmpty()) {
                     minDate = firstTransfer.get(0).getArrivalTime();
                     maxDate = firstTransfer.get(0).getArrivalTime();
-                    for (FlightEntity flight : firstTransfer) {
-                        if (minDate.before(flight.getArrivalTime())) {
-                            minDate = flight.getArrivalTime();
-                        }
-                        if (maxDate.after(flight.getArrivalTime())) {
-                            maxDate = flight.getArrivalTime();
-                        }
-                    }
+                    flightForDates = new FlightForDates(list, minDate, maxDate).invoke();
+                    minDate = flightForDates.getMinDate();
+                    maxDate = flightForDates.getMaxDate();
 
+                    // TODO: 06.02.2018 i am too vpadlu to name it
                     Query secondTransferQuery = HibernateUtil.getCurrentSession()
                             .createQuery("select flight from FlightEntity flight " +
                                     "where flight.airportFromId in (:ids) " +
@@ -257,6 +220,38 @@ public class FlightService extends AbstractService<FlightEntity>{
         catch (Exception exc) {
             HibernateUtil.getCurrentSession().getTransaction().rollback();
             throw exc;
+        }
+    }
+
+    private class FlightForDates {
+        private List<FlightEntity> list;
+        private Timestamp minDate;
+        private Timestamp maxDate;
+
+        FlightForDates(List<FlightEntity> list, Timestamp minDate, Timestamp maxDate) {
+            this.list = list;
+            this.minDate = minDate;
+            this.maxDate = maxDate;
+        }
+
+        Timestamp getMinDate() {
+            return minDate;
+        }
+
+        Timestamp getMaxDate() {
+            return maxDate;
+        }
+
+        FlightForDates invoke() {
+            for (FlightEntity flight : list) {
+                if (minDate.before(flight.getArrivalTime())) {
+                    minDate = flight.getArrivalTime();
+                }
+                if (maxDate.after(flight.getArrivalTime())) {
+                    maxDate = flight.getArrivalTime();
+                }
+            }
+            return this;
         }
     }
 }

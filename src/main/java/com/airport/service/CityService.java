@@ -2,6 +2,7 @@ package com.airport.service;
 
 import com.airport.model.entities.CityEntity;
 import com.airport.util.HibernateUtil;
+import com.airport.util.QueryHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +15,7 @@ public class CityService extends AbstractService<CityEntity>{
         try {
             HibernateUtil.getCurrentSession().beginTransaction();
             CityEntity cityEntity = (CityEntity) HibernateUtil.getCurrentSession()
-                    .createQuery("SELECT city FROM CityEntity city WHERE city.name = :name")
+                    .createQuery(QueryHolder.GET_CITY_BY_NAME)
                     .setString("name", name)
                     .uniqueResult();
             HibernateUtil.getCurrentSession().getTransaction().commit();
